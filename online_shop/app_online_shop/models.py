@@ -37,26 +37,33 @@ class OnlineShop(models.Model):
     @admin.display(description='дата создания')
     def created_date(self):
         from django.utils import timezone
-        if self.created_at.date() == timezone.now().date():
-            created_time = self.created_at.time().strftime("%H:%M:%S")
+        if self.created_time.date() == timezone.now().date():
+            created_date = self.created_time.time().strftime("%H:%M:%S")
             return format_html(
-                '<span style="color: green; font-weight: bold;">Сегодня в {}</span>', created_time
+                '<span style="color: green; font-weight: bold;">Сегодня в {}</span>', created_date
             )
-        return self.created_at.strftime("%d.%m.%Y в %H:%M:%S")
+        return self.created_time.strftime("%d.%m.%Y в %H:%M:%S")
 
     @admin.display(description='дата последнего обновления')
     def updated_date(self):
         from django.utils import timezone
-        if self.updated_at.date() == timezone.now().date():
-            created_time = self.updated_at.time().strftime("%H:%M:%S")
+        if self.update_time.date() == timezone.now().date():
+            created_time = self.update_time.time().strftime("%H:%M:%S")
             return format_html(
                 '<span style="color: green; font-weight: bold;">Сегодня в {}</span>', created_time
             )
-        return self.updated_at.strftime("%d.%m.%Y в %H:%M:%S")
+        return self.update_time.strftime("%d.%m.%Y в %H:%M:%S")
+    
+    @admin.display(description='изображение')
+    def mini_image(self):
+        if self.image:
+            img = self.image.url
+            return format_html('<img src={}', img)
+        else:
+            return '(Без изображения)'
 
     def __str__(self):
         return f"Advertisement(id={self.id}, title={self.title}, price={self.price})"
 
     class Meta:
         db_table = "advertisements"
-
